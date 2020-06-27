@@ -13,11 +13,22 @@ const Axios = module.exports = {
     cacheRedis = redis
     return Axios
   },
+  /**
+   * @description request
+   * @param config
+   * @param key
+   * @param code
+   * @param cache 缓存
+   * @param cache.name 缓存名称
+   * @param cache.value 缓存内容
+   * @returns {Promise<*|ReturnValue>}
+   * @constructor
+   */
   Request: async (config, key, code, cache) => {
     let retValue = KOCReturn.Value()
     // region 读取缓存
     if (cache) {
-      retValue = await KOCReturn.Promise(() => cacheRedis.get(Axios.CacheKey(cache)))
+      retValue = await KOCReturn.Promise(() => cacheRedis.get(Axios.CacheKey(cache.name, cache.value)))
       if (!retValue.hasError && retValue.returnObject) {
         try {
           retValue.returnObject = JSON.parse(retValue.returnObject)
@@ -31,17 +42,18 @@ const Axios = module.exports = {
     retValue.returnObject = retValue.returnObject.data
     if (key !== undefined && code !== undefined) {
       if (retValue.returnObject[key] === code) {
-        cacheRedis.set(Axios.CacheKey(cache), JSON.stringify(retValue.returnObject), 'EX', Axios.CacheExpire())
+        cacheRedis.set(Axios.CacheKey(cache.name, cache.value), JSON.stringify(retValue.returnObject), 'EX', Axios.CacheExpire())
       }
     }
     return retValue
   },
   /**
    * @description 缓存key
+   * @param {string} name 缓存名称
    * @param {Object} value 缓存内容
    * @returns {string}
    */
-  CacheKey: (value) => KOCString.MD5(JSON.stringify(value)),
+  CacheKey: (name, value) => KOCString.MD5(KOCString.ToString(name) + JSON.stringify(value)),
   /**
    * @description 过期时间
    * @param {number} [expire] 分钟
