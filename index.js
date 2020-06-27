@@ -21,6 +21,7 @@ const Axios = module.exports = {
    * @param cache 缓存
    * @param cache.name 缓存名称
    * @param cache.value 缓存内容
+   * @param [cache.expire] 缓存内容
    * @returns {Promise<*|ReturnValue>}
    * @constructor
    */
@@ -42,7 +43,7 @@ const Axios = module.exports = {
     retValue.returnObject = retValue.returnObject.data
     if (key !== undefined && code !== undefined) {
       if (retValue.returnObject[key] === code) {
-        cacheRedis.set(Axios.CacheKey(cache.name, cache.value), JSON.stringify(retValue.returnObject), 'EX', Axios.CacheExpire())
+        cacheRedis.set(Axios.CacheKey(cache.name, cache.value), JSON.stringify(retValue.returnObject), 'EX', Axios.CacheExpire(cache.expire))
       }
     }
     return retValue
@@ -59,5 +60,5 @@ const Axios = module.exports = {
    * @param {number} [expire] 分钟
    * @returns {number}
    */
-  CacheExpire: (expire) => KOCString.ToIntPositive(expire, 120) * 60
+  CacheExpire: (expire) => KOCString.ToIntPositive(expire, 10) * 60
 }
