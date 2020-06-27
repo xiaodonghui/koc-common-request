@@ -1,0 +1,25 @@
+{
+  "name": "koc-common-request",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "koc-common-return": "^1.0.19",
+    "koc-common-string": "^1.0.44"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaodonghui/koc-common-request.git"
+  },
+  "author": "wangdonghui",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xiaodonghui/koc-common-request/issues"
+  },
+  "homepage": "https://github.com/xiaodonghui/koc-common-request#readme"
+}
