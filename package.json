@@ -8,7 +8,10 @@
     "koc-common-return": "^1.0.19",
     "koc-common-string": "^1.0.44"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "koc-common-datetime": "^1.0.25",
+    "koc-common-redis": "^2.0.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
