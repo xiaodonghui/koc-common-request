@@ -41,11 +41,13 @@ const Axios = module.exports = {
     retValue = await KOCReturn.Promise(() => axiosInstance.request(config))
     if (retValue.hasError || !retValue.returnObject) return retValue
     retValue.returnObject = retValue.returnObject.data
-    if (key !== undefined && code !== undefined) {
+    // region 写入缓存
+    if (key !== undefined && code !== undefined && cache) {
       if (retValue.returnObject[key] === code) {
         cacheRedis.set(Axios.CacheKey(cache.name, cache.value), JSON.stringify(retValue.returnObject), 'EX', Axios.CacheExpire(cache.expire))
       }
     }
+    // endregion
     return retValue
   },
   /**
