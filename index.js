@@ -18,14 +18,15 @@ const Axios = module.exports = {
    * @param config
    * @param key
    * @param code
-   * @param cache 缓存
+   * @param [cache] 缓存
    * @param cache.name 缓存名称
    * @param cache.value 缓存内容
    * @param [cache.expire] 缓存内容
+   * @param {Array} [cacheRemove] 删除缓存
    * @returns {Promise<*|ReturnValue>}
    * @constructor
    */
-  Request: async (config, key, code, cache) => {
+  Request: async (config, key, code, cache, cacheRemove = []) => {
     let retValue = KOCReturn.Value()
     // region 读取缓存
     if (cache) {
@@ -46,6 +47,11 @@ const Axios = module.exports = {
       if (retValue.returnObject[key] === code) {
         cacheRedis.set(Axios.CacheKey(cache.name, cache.value), JSON.stringify(retValue.returnObject), 'EX', Axios.CacheExpire(cache.expire))
       }
+    }
+    // endregion
+    // region 删除缓存
+    for (const thisValue of cacheRemove) {
+      cacheRedis.del(Axios.CacheKey(thisValue.name, thisValue.value))
     }
     // endregion
     return retValue
