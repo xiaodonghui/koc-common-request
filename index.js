@@ -4,17 +4,14 @@ const axios = require('axios')
 const KOCReturn = require('koc-common-return')
 const KOCString = require('koc-common-string')
 
-let axiosInstance = null
-let cacheRedis = null
+class KOCRequest {
+  constructor (config, redis) {
+    this.axiosInstance = axios.create(config)
+    this.cacheRedis = redis
+  }
 
-const Axios = module.exports = {
-  Init: (config, redis) => {
-    axiosInstance = axios.create(config)
-    cacheRedis = redis
-    return Axios
-  },
   /**
-   * @description request
+   * @description Request
    * @param config
    * @param key
    * @param code
@@ -26,11 +23,11 @@ const Axios = module.exports = {
    * @returns {Promise<*|ReturnValue>}
    * @constructor
    */
-  Request: async (config, key, code, cache, cacheRemove = []) => {
+  async Request (config, key, code, cache, cacheRemove = []) {
     let retValue = KOCReturn.Value()
     // region 读取缓存
     if (cache) {
-      retValue = await KOCReturn.Promise(() => cacheRedis.get(Axios.CacheKey(cache.name, cache.value)))
+      retValue = await KOCReturn.Promise(() => this.cacheRedis.get(this.CacheKey(cache.name, cache.value)))
       if (!retValue.hasError && retValue.returnObject) {
         try {
           retValue.returnObject = JSON.parse(retValue.returnObject)
@@ -39,34 +36,42 @@ const Axios = module.exports = {
       }
     }
     // endregion
-    retValue = await KOCReturn.Promise(() => axiosInstance.request(config))
+    retValue = await KOCReturn.Promise(() => this.axiosInstance.request(config))
     if (retValue.hasError || !retValue.returnObject) return retValue
     retValue.returnObject = retValue.returnObject.data
     // region 写入缓存
     if (key !== undefined && code !== undefined && cache) {
       if (retValue.returnObject[key] === code) {
-        cacheRedis.set(Axios.CacheKey(cache.name, cache.value), JSON.stringify(retValue.returnObject), 'EX', Axios.CacheExpire(cache.expire))
+        this.cacheRedis.set(this.CacheKey(cache.name, cache.value), JSON.stringify(retValue.returnObject), 'EX', this.CacheExpire(cache.expire))
       }
     }
     // endregion
     // region 删除缓存
     for (const thisValue of cacheRemove) {
-      cacheRedis.del(Axios.CacheKey(thisValue.name, thisValue.value))
+      this.cacheRedis.del(this.CacheKey(thisValue.name, thisValue.value))
     }
     // endregion
     return retValue
-  },
+  }
+
   /**
    * @description 缓存key
    * @param {string} name 缓存名称
    * @param {Object} value 缓存内容
    * @returns {string}
    */
-  CacheKey: (name, value) => KOCString.MD5(KOCString.ToString(name) + JSON.stringify(value)),
+  CacheKey (name, value) {
+    return KOCString.MD5(KOCString.ToString(name) + JSON.stringify(value))
+  }
+
   /**
    * @description 过期时间
    * @param {number} [expire] 分钟
    * @returns {number}
    */
-  CacheExpire: (expire) => KOCString.ToIntPositive(expire, 10) * 60
+  CacheExpire (expire) {
+    return KOCString.ToIntPositive(expire, 10) * 60
+  }
 }
+
+module.exports = KOCRequest

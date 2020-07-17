@@ -1,6 +1,6 @@
 {
   "name": "koc-common-request",
-  "version": "1.0.8",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "dependencies": {
@@ -9,7 +9,7 @@
     "koc-common-string": "^1.0.44"
   },
   "devDependencies": {
-    "koc-common-datetime": "^1.0.25",
+    "koc-common-datetime": "^1.0.30",
     "koc-common-redis": "^2.0.0"
   },
   "scripts": {
