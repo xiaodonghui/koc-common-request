@@ -1,15 +1,15 @@
 {
   "name": "koc-common-request",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "axios": "^0.21.0",
-    "koc-common-return": "^2.0.8",
-    "koc-common-string": "^1.0.49"
+    "axios": "^0.21.1",
+    "koc-common-return": "^2.0.9",
+    "koc-common-string": "^1.0.51"
   },
   "devDependencies": {
-    "koc-common-datetime": "^1.0.31",
+    "koc-common-datetime": "^1.0.32",
     "koc-common-redis": "^2.0.3"
   },
   "scripts": {
