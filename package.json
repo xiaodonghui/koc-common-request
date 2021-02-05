@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "koc-common-datetime": "^1.0.32",
-    "koc-common-redis": "^2.0.3"
+    "koc-common-redis": "^2.0.4"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
