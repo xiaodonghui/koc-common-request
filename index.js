@@ -13,10 +13,10 @@ class KOCRequest {
   }
 
   /**
-   * @desc 初始化实例对象
+   * 初始化实例对象
    * @param config
-   * @param redis
-   * @return {KOCRequest}
+   * @param [redis]
+   * @return {*}
    */
   static Init (config, redis) {
     return new KOCRequest(config, redis)
@@ -25,11 +25,11 @@ class KOCRequest {
   /**
    * @desc Request
    * @param config
-   * @param key 响应数据成功参数字段名
-   * @param code 响应数据成功参数值
+   * @param [key] 响应数据成功参数字段名
+   * @param [code] 响应数据成功参数值
    * @param [cache] 缓存
-   * @param cache.name 缓存名称
-   * @param cache.value 缓存内容
+   * @param [cache.name] 缓存名称
+   * @param [cache.value] 缓存内容
    * @param [cache.expire] 缓存内容
    * @param [cacheRemove] 删除缓存
    * @returns {Promise}
@@ -67,7 +67,7 @@ class KOCRequest {
   }
 
   /**
-   * @desc 清除缓存
+   * 清除缓存
    * @param {string} name 缓存名称
    * @param {Object} value 缓存内容
    */
@@ -77,14 +77,14 @@ class KOCRequest {
 }
 
 /**
- * @desc 缓存key
+ * 缓存key
  * @param {string} name 缓存名称
  * @param {Object} value 缓存内容
  * @returns {string}
  */
 const CacheKey = (name, value) => KOCString.MD5(KOCString.ToString(name) + JSON.stringify(value))
 /**
- * @desc 过期时间
+ * 过期时间
  * @param {number} [expire] 分钟
  * @returns {number}
  */
